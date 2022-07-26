@@ -1,0 +1,2 @@
+# PlantCareServer
+一个Wordpress记录浇水施肥的小系统
