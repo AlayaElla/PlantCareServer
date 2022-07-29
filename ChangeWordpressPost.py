@@ -57,8 +57,8 @@ def compare_time(time1,time2):
         delta = d1 - d2
         return delta.days
 
-#更新所有内容函数
-def updatePlantAllContent(_post):
+#更新标题
+def updatePlantTitle(_post):
         nowtime = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
         nowtimeStr = nowtime.strftime('%Y-%m-%d')
 
@@ -76,10 +76,17 @@ def updatePlantAllContent(_post):
                 title1 = "今天刚浇过水"
         repl = f'{title0}：{title1}'
         _post.title = re.sub(pattern, repl, _post.title, count=0, flags=0)
+        return _post
 
-        updateContentLastDay(_post,actionDic["1"],nowtimeStr)
-        updateContentLastDay(_post,actionDic["2"],nowtimeStr)
-        updateContentLastDay(_post,actionDic["3"],nowtimeStr)
+#更新所有内容函数
+def updatePlantAllContent(_post):
+        nowtime = datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
+        nowtimeStr = nowtime.strftime('%Y-%m-%d')
+
+        _post = updatePlantTitle(_post)
+        _post = updateContentLastDay(_post,actionDic["1"],nowtimeStr)
+        _post = updateContentLastDay(_post,actionDic["2"],nowtimeStr)
+        _post = updateContentLastDay(_post,actionDic["3"],nowtimeStr)
         
         return _post
 
