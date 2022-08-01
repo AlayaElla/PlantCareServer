@@ -1,4 +1,6 @@
 from flask import Flask, redirect, url_for, request
+from flask import jsonify
+from flask import make_response
 import ChangeWordpressPost
 import datetime
 import pytz
@@ -18,6 +20,13 @@ def compareToken(passwd,usr_token):
 
 app = Flask(__name__)
 
+JSON_RESPONSE_CONTENT_TYPE = 'application/json;charset=UTF-8'
+def _custom_response(json_string):
+    response = make_response(jsonify(json_string))
+    response.headers['Content-Type'] = JSON_RESPONSE_CONTENT_TYPE
+    return response
+
+
 @app.route('/plantcare/',methods = ['POST'])
 def plantcare_post():
    if request.method == 'POST':
@@ -32,7 +41,7 @@ def plantcare_post():
         #身份验证
         usr_token = request.json["token"]
         if(not compareToken(passwd,usr_token)):
-            return "🔒🔒🚫🚫权限错误!"
+            return _custom_response("🔒🔒🚫🚫权限错误!")
 
         if(flowerName != None and actionName != None):
             client = ChangeWordpressPost.getclient()
@@ -55,7 +64,7 @@ def plantcare_post():
                 text_content = "🤕🤕🤕🤕指令错误!"
                 #print("指令错误！")
 
-        return text_content
+        return _custom_response(text_content)
 
 if __name__ == '__main__':
-   app.run(host='0.0.0.0', port=123)
+   app.run(host='0.0.0.0', port=8000)
